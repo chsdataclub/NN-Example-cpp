@@ -59,20 +59,18 @@ Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, int cut
 
 	for (int z = 0; strikes > 0 && bestFit < target; z++) {
 		cout << "//////////////////////////////////////////////////////////////" << endl;
-		printNeat();
-		cout << "/////////////////////" << endl;
+		cout << "mating" << endl;
 		//mates
 		for (int i = 0; i < species.size(); i++) {
 			//wg.Add(1)
 			species[i].mateSpecies();//&wg);
 		}
-		printNeat();
 
 		//mateSpecies();
-		printNeat();
-
+		cout << "training" << endl;
 		trainNetworks(input);
 
+		cout << "post" << endl;
 		if (z % 5 == 0) {
 			speciateAll();
 		}

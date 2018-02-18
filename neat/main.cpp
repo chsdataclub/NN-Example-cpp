@@ -117,7 +117,7 @@ int main()
 	randInit();
 
 	Network winner(0, 0, 0, 0, 0.0, false);
-	Neat neat = Neat(100, 9, 1, .3, .1);
+	Neat neat = Neat(250, 9, 1, .3, .1);
 
 	winner = neat.start(dataset, 100, 10000);
 	//neat.printNeat()

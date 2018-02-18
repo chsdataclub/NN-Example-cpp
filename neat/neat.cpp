@@ -121,7 +121,7 @@ void Neat::trainNetworks(vector<pair<vector<double>, vector<double>>>& input)
 {
 	auto train = [this](vector<pair<vector<double>, vector<double>>>& input, int start, int end) {
 		for (int i = start; i <= end; i++) {
-			network[i].trainset(input, 100000);
+			network[i].trainset(input, 10000);
 		}
 	};
 
@@ -135,6 +135,15 @@ void Neat::trainNetworks(vector<pair<vector<double>, vector<double>>>& input)
 	for (int i = 0; i < threads.size(); i++) {
 		threads[i].join();
 	}
+
+	/*threads.clear();
+	for (int i = 0; i < species.size(); i++) {
+		threads.push_back(thread(&Species::trainNetworks, &species[i], input));
+	}
+
+	for (int i = 0; i < threads.size(); i++) {
+		threads[i].join();
+	}*/
 }
 
 void Neat::mateSpecies()

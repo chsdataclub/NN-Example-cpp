@@ -99,7 +99,7 @@ int main()
 
 			if (i > 35) {
 				double val = -1.0;
-				if (data[i] > data[i - 1]) {
+				if (data[i] > 0) {
 					val = 1.0;
 				}
 				dataset[count - 1].second[0] = val;
@@ -117,7 +117,7 @@ int main()
 	randInit();
 
 	Network winner(0, 0, 0, 0, 0.0, false);
-	Neat neat = Neat(20, 9, 1, .3, .1);
+	Neat neat = Neat(100, 9, 1, .3, .1);
 
 	winner = neat.start(dataset, 100, 10000);
 	//neat.printNeat()
@@ -128,5 +128,6 @@ int main()
 	cout << "best " << winner.fitness << "error" << 1 / winner.fitness << endl;
 	//cout << "result " << winner.process(data[0].first) << winner.process(data[1].first) << winner.process(data[2].first) << winner.process(data[3].first) << endl; //1 1 0 0
 	cout << "done";
+	system("pause");
 	return 0;
 }

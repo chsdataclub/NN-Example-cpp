@@ -87,7 +87,7 @@ double Network::backProp(vector<double>& input, vector<double>& desired)
 
 	double error = 0.0; //return value
 
-					  //this will calc all the influence
+	//this will calc all the influence
 	for (int i = 0; i < output.size(); i++) {
 		output[i]->setInfluence(output[i]->value - desired[i]);
 		error += abs(output[i]->value - desired[i]);

@@ -102,7 +102,7 @@ Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, vector<
 		cout << "epoch:" << z << " best: " << bestFit << endl;
 		cout << endl;
 
-		ofstream myfile("C:/Users/Jared Stigter/Source/Repos/cpp-Neat/neat/bestnet.txt");
+		ofstream myfile("bestnet.txt");
 		myfile << bestNet.input.size() - 1 << endl;
 		myfile << bestNet.output.size() << endl;
 		myfile << bestNet.nodeList.size() - bestNet.input.size() - bestNet.output.size() << endl;

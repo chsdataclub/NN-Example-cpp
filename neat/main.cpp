@@ -148,7 +148,7 @@ int main()
 	}
 	cout << "done";
 
-	ofstream myfile("C:/Users/Jared Stigter/Source/Repos/cpp-Neat/neat/bestnet.txt");
+	ofstream myfile("bestnet.txt");
 	myfile << winner.input.size()-1 << endl;
 	myfile << winner.output.size() << endl;
 	myfile << winner.nodeList.size()-winner.input.size()-winner.output.size() << endl;

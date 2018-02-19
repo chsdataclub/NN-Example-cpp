@@ -119,15 +119,27 @@ int main()
 	Network winner(0, 0, 0, 0, 0.0, false);
 	Neat neat = Neat(250, 9, 1, .3, .1);
 
-	winner = neat.start(dataset, 100, 10000);
+	winner = neat.start(dataset, 100, 10000, winner);
 	//neat.printNeat()
 
 	cout << endl;
 
 	//printNetwork(&winner);
 	cout << "best " << winner.fitness << "error" << 1 / winner.fitness << endl;
-	//cout << "result " << winner.process(data[0].first) << winner.process(data[1].first) << winner.process(data[2].first) << winner.process(data[3].first) << endl; //1 1 0 0
+	cout << "result " << winner.process(dataset[0].first)[0] << winner.process(dataset[100].first)[0] << winner.process(dataset[150].first)[0] << winner.process(dataset[3].first)[250] << endl; //1 1 0 0
 	cout << "done";
+
+	ofstream myfile("C:/Users/Jared Stigter/Source/Repos/cpp-Neat/neat/bestnet.txt");
+	myfile << winner.input.size()-1 << endl;
+	myfile << winner.output.size() << endl;
+	myfile << winner.nodeList.size()-winner.input.size()-winner.output.size() << endl;
+	for (int i = 0; i < winner.nodeList.size(); i++) {
+		for (int a = 0; a < winner.nodeList[i].send.size(); a++) {
+			myfile << winner.nodeList[i].id << " " << winner.nodeList[i].send[a].nodeTo->id << " " << winner.nodeList[i].send[a].weight << endl;
+		}
+	}
+	myfile.flush();
+	myfile.close();
 	system("pause");
 	return 0;
 }

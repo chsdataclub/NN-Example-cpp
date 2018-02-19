@@ -48,10 +48,9 @@ Neat::Neat(int numNetworks, int input, int output, double mutate, double lr) : n
 }
 
 //TODO: mthread
-Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, int cutoff, double target)
+Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, int cutoff, double target, Network& bestNet)
 {
 	int strikes = cutoff;
-	Network bestNet;
 	cout << isInput(network[0].getNode(3)) << " " << isOutput(network[0].getNode(3)) << endl;
 	double bestFit = 0;
 
@@ -97,7 +96,6 @@ Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, int cut
 			}
 		}
 
-		printNeat();
 		cout << "best" << endl;
 		bestNet.printNetwork();
 		cout << "epoch:" << z << " best: " << bestFit << endl;

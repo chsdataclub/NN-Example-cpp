@@ -9,6 +9,7 @@ using namespace std;
 int main()
 {
 	vector<pair<vector<double>, vector<double>>> dataset;
+	vector<pair<vector<double>, vector<double>>> valid;
 	//control = make([][][]float64, 0, 100)
 	{
 
@@ -72,6 +73,7 @@ int main()
 			lastemani = emani;
 		}
 
+		srand(time(NULL));
 		for (int i = 35; i < data.size() - 1; i++) {
 			sumtw -= data[i - 11];
 			sumts -= data[i - 25];
@@ -91,18 +93,31 @@ int main()
 			lastemani = emani;
 
 			pair<vector<double>, vector<double>> p;
+			//the value will always be positive and when grows > 1
 			vector<double> in = { data[i], sumtw / 12, sumts / 26, sumt / 20, ematw, emats, macd, emani - macd, data[i] - ((sumt / 20) + 2 * dev) };
-			vector<double> o = { -1 };
+			vector<double> o = { -2 };
 			p.first = in;
 			p.second = o;
-			dataset.push_back(p);
 
 			if (i > 35) {
 				double val = -1.0;
-				if (data[i] > 0) {
+				if (data[i] > 1) {
 					val = 1.0;
 				}
-				dataset[count - 1].second[0] = val;
+
+				if (dataset.back().second[0] == -2) {
+					dataset.back().second[0] = val;
+				}
+				else {
+					valid.back().second[0] = val;
+				}
+			}
+
+			if (rand()/(double)RAND_MAX > .1) {
+				dataset.push_back(p);
+			}
+			else {
+				valid.push_back(p);
 			}
 
 			count++;
@@ -119,14 +134,18 @@ int main()
 	Network winner(0, 0, 0, 0, 0.0, false);
 	Neat neat = Neat(250, 9, 1, .3, .1);
 
-	winner = neat.start(dataset, 100, 10000, winner);
+	//neg 1 indicates sell
+	winner = neat.start(dataset, valid, 100, 10000, winner);
 	//neat.printNeat()
 
 	cout << endl;
 
 	//printNetwork(&winner);
-	cout << "best " << winner.fitness << "error" << 1 / winner.fitness << endl;
-	cout << "result " << winner.process(dataset[0].first)[0] << winner.process(dataset[100].first)[0] << winner.process(dataset[150].first)[0] << winner.process(dataset[3].first)[250] << endl; //1 1 0 0
+	cout << "best " << winner.fitness << "error " << 1 / winner.fitness << endl;
+	//cout << "result " << winner.process(dataset[0].first)[0] << winner.process(dataset[100].first)[0] << winner.process(dataset[150].first)[0] << winner.process(dataset[3].first)[250] << endl; //1 1 0 0
+	for (int i = 0; i < valid.size(); i++) {
+		cout << winner.process(valid[i].first)[0] << " vs " << valid[i].second[0] << " dif " << (winner.process(valid[i].first)[0]-valid[i].second[0]) << endl;
+	}
 	cout << "done";
 
 	ofstream myfile("C:/Users/Jared Stigter/Source/Repos/cpp-Neat/neat/bestnet.txt");

@@ -21,7 +21,7 @@ public:
 	void printNetwork();
 	vector<double> process(vector<double>& input);
 	double backProp(vector<double>& input, vector<double>& desired);
-	double trainset(vector<pair<vector<double>, vector<double>>>& input, int lim);
+	double trainset(vector<pair<vector<double>, vector<double>>>& input, vector<pair<vector<double>, vector<double>>>& valid, int lim);
 	int getInnovation(int pos);
 	void addInnovation(int num);
 	bool containsInnovation(int num);

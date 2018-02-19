@@ -33,7 +33,7 @@ public:
 	void updateStereotype();
 	void mutateNetwork(Network& network);
 	void mateNetwork(vector<int>& nB, vector<int>& nA, int nodeNum, int nodeNumA, Network& ans);
-	void trainNetworks(vector<pair<vector<double>, vector<double>>>& trainingSet);
+	void trainNetworks(vector<pair<vector<double>, vector<double>>>& trainingSet, vector<pair<vector<double>, vector<double>>>& valid);
 	void mateSpecies();
 	void adjustFitness();
 	int avgNode();

@@ -17,11 +17,11 @@ public:
 
 	Neat(int numNetworks, int input, int output, double mutate, double lr);
 
-	Network start(vector<pair<vector<double>,vector<double>>>& input, int cutoff, double target, Network& bestNet); //returning network will not work
+	Network start(vector<pair<vector<double>,vector<double>>>& input, vector<pair<vector<double>, vector<double>>>& valid, int cutoff, double target, Network& bestNet); //returning network will not work
 	void printNeat();
 	void mutatePopulation();
 	
-	void trainNetworks(vector<pair<vector<double>, vector<double>>>& input);
+	void trainNetworks(vector<pair<vector<double>, vector<double>>>& input, vector<pair<vector<double>, vector<double>>>& valid);
 	void mateSpecies();
 
 	void speciateAll();

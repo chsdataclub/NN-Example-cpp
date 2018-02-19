@@ -9,6 +9,7 @@
 #include <array>
 #include "Activation.h"
 #include <thread>
+#include <fstream>
 using namespace std;
 
 Neat::Neat(int numNetworks, int input, int output, double mutate, double lr) : nodeMutate(mutate)
@@ -48,13 +49,13 @@ Neat::Neat(int numNetworks, int input, int output, double mutate, double lr) : n
 }
 
 //TODO: mthread
-Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, int cutoff, double target, Network& bestNet)
+Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, vector<pair<vector<double>, vector<double>>>& valid, int cutoff, double target, Network& bestNet)
 {
 	int strikes = cutoff;
 	cout << isInput(network[0].getNode(3)) << " " << isOutput(network[0].getNode(3)) << endl;
 	double bestFit = 0;
 
-	trainNetworks(input);
+	trainNetworks(input, valid);
 
 	for (int z = 0; strikes > 0 && bestFit < target; z++) {
 		cout << "//////////////////////////////////////////////////////////////" << endl;
@@ -67,7 +68,7 @@ Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, int cut
 
 		//mateSpecies();
 		cout << "training" << endl;
-		trainNetworks(input);
+		trainNetworks(input, valid);
 
 		cout << "post" << endl;
 		if (z % 5 == 0) {
@@ -100,6 +101,18 @@ Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, int cut
 		bestNet.printNetwork();
 		cout << "epoch:" << z << " best: " << bestFit << endl;
 		cout << endl;
+
+		ofstream myfile("C:/Users/Jared Stigter/Source/Repos/cpp-Neat/neat/bestnet.txt");
+		myfile << bestNet.input.size() - 1 << endl;
+		myfile << bestNet.output.size() << endl;
+		myfile << bestNet.nodeList.size() - bestNet.input.size() - bestNet.output.size() << endl;
+		for (int i = 0; i < bestNet.nodeList.size(); i++) {
+			for (int a = 0; a < bestNet.nodeList[i].send.size(); a++) {
+				myfile << bestNet.nodeList[i].id << " " << bestNet.nodeList[i].send[a].nodeTo->id << " " << bestNet.nodeList[i].send[a].weight << endl;
+			}
+		}
+		myfile.flush();
+		myfile.close();
 	}
 
 	return bestNet;
@@ -115,19 +128,20 @@ void Neat::mutatePopulation()
 	}
 }
 
-void Neat::trainNetworks(vector<pair<vector<double>, vector<double>>>& input)
+void Neat::trainNetworks(vector<pair<vector<double>, vector<double>>>& input, vector<pair<vector<double>, vector<double>>>& valid)
 {
-	auto train = [this](vector<pair<vector<double>, vector<double>>>& input, int start, int end) {
+	auto train = [this](vector<pair<vector<double>, vector<double>>>& input, vector<pair<vector<double>, vector<double>>>& valid, int start, int end) {
+		//vector<pair<vector<double>, vector<double>>>* valid = __nullptr;
 		for (int i = start; i <= end; i++) {
-			network[i].trainset(input, 10000);
+			network[i].trainset(input, valid, 10000);
 		}
 	};
 
 	int size = network.size() - 1;
 	int upper = size % threads.size() + size / threads.size();
-	threads[0] = thread(train, input, 0, upper);
+	threads[0] = thread(train, input, valid, 0, upper);
 	for (int i = 1; i < threads.size(); i++, upper += size / threads.size()) {
-		threads[i] = thread(train, input, upper, upper + size / threads.size());
+		threads[i] = thread(train, input, valid, upper, upper + size / threads.size());
 	}
 
 	for (int i = 0; i < threads.size(); i++) {

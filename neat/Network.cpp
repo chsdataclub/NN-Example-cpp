@@ -105,11 +105,11 @@ double Network::backProp(vector<double>& input, vector<double>& desired)
 	return error;
 }
 
-double Network::trainset(vector<pair<vector<double>, vector<double>>>& input, int lim)
+double Network::trainset(vector<pair<vector<double>, vector<double>>>& input, vector<pair<vector<double>, vector<double>>>& valid, int lim)
 {
 	double errorChange = -1000.0; //percent of error change
 	double lastError = 1000.0;
-
+	double lastValid = 100000.0;
 	//initializes best weights
 	vector<vector<double>> bestWeight;
 
@@ -141,8 +141,18 @@ double Network::trainset(vector<pair<vector<double>, vector<double>>>& input, in
 		errorChange = (currentError - lastError) / lastError;
 		lastError = currentError;
 
-		//decreases the number of strikes or resets them and changes best weight
-		if (errorChange >= 0) {
+		double validError = 0;
+		for (int i = 0; i < valid.size(); i++) {
+			vector<double> val = process(valid[i].first);
+			for (int a = 0; a < valid[i].second.size(); a++) {
+				validError += abs(val[a]-valid[i].second[a]);
+			}
+		}
+
+		if (validError > lastValid) {
+			strikes -= 5;
+		}
+		else if (errorChange >= 0) {		//decreases the number of strikes or resets them and changes best weight
 			strikes--;
 		}
 		else {
@@ -158,6 +168,7 @@ double Network::trainset(vector<pair<vector<double>, vector<double>>>& input, in
 			strikes = 10;
 		}
 
+		lastValid = validError;
 		//cout << "Error: " << currentError << " change " << errorChange << endl;
 	}
 

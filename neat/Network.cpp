@@ -150,7 +150,7 @@ double Network::trainset(vector<pair<vector<double>, vector<double>>>& input, ve
 		}
 
 		if (validError > lastValid) {
-			strikes -= 5;
+			strikes--;
 		}
 		else if (errorChange >= 0) {		//decreases the number of strikes or resets them and changes best weight
 			strikes--;

@@ -10,9 +10,7 @@ int main()
 {
 	vector<pair<vector<double>, vector<double>>> dataset;
 	vector<pair<vector<double>, vector<double>>> valid;
-	//control = make([][][]float64, 0, 100)
 	{
-
 		double sumts = 0.0;
 		double sumtw = 0.0;
 
@@ -100,7 +98,7 @@ int main()
 			p.second = o;
 
 			if (i > 35) {
-				double val = -1.0;
+				double val = 0;
 				if (data[i] > 1) {
 					val = 1.0;
 				}
@@ -128,6 +126,23 @@ int main()
 		}
 	}
 
+	for (int i = 0; i < dataset[0].first.size(); i++) {
+		double max = -1000000;
+		double min = 100000000;
+		for (int a = 0; a < dataset.size(); a++) {
+			double val = dataset[a].first[i];
+			if (val > max) {
+				max = val;
+			}
+			else if (val < min) {
+				min = val;
+			}
+		}
+
+		for (int a = 0; a < dataset.size(); a++) {
+			dataset[a].first[i] = (dataset[a].first[i] - min) / (max - min);
+		}
+	}
 
 	randInit();
 

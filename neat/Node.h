@@ -12,9 +12,11 @@ public:
 	double influence;
 	int inputRecieved;
 	int influenceRecieved;
+	double(*activation)(double value);
+	double(*activationDerivative)(double value);
 
 	Node(int id, int send);
-
+	Node(int id, int send, double(*activation)(double value), double(*activationDerivative)(double value));
 	void recieveValue();
 	void recieveInfluence();
 	Connection& addSendCon(Connection c);

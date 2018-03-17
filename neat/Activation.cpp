@@ -21,10 +21,28 @@ double sigmoid(double value) {
 double sigmoidDerivative(double value) {
 	return sigmoid(value) * (1 - sigmoid(value));
 }
-
+double lRelu(double value)
+{
+	if (value >= 0) {
+		return value;
+	}
+	else {
+		return .01*value;
+	}
+}
+double lReluDerivative(double value)
+{
+	if (value < 0) {
+		return .01;
+	}
+	else {
+		return 1;
+	}
+}
 void randInit() {
 	rng.seed(time(NULL));
 }
+
 //generates number [f,t]
 int random(int f, int t)
 {
@@ -32,3 +50,13 @@ int random(int f, int t)
 
 	return uint_dist10(rng);
 }
+
+double random(double f, double t)
+{
+	int a = f * RAND_MAX;
+	int b = t * RAND_MAX;
+	std::uniform_int_distribution<int32_t> uint_dist10(a, b);
+
+	return uint_dist10(rng) / (double)RAND_MAX;
+}
+

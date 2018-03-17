@@ -4,11 +4,17 @@ using namespace std;
 
 Node::Node(int id, int send)
 {
-	this->id = id; 
+	this->id = id;
 	this->send.reserve(send);
 	inputRecieved = 0;
 	influenceRecieved = 0;
 	value = 0;
+}
+
+Node::Node(int id, int send, double(*activation)(double value), double(*activationDerivative)(double value)) : Node(id, send) {
+	Node(id, send);
+	this->activation = activation;
+	this->activationDerivative = activationDerivative;
 }
 
 void Node::recieveValue()
@@ -20,7 +26,7 @@ void Node::recieveValue()
 		sum += (recieve[i]->nodeFrom->value) * recieve[i]->weight;
 	}
 
-	setValue(tanh(sum));
+	setValue(sum);
 	inputRecieved = 0;
 }
 
@@ -75,7 +81,7 @@ bool Node::connectsTo(int id)
 
 void Node::setValue(double a)
 {
-	value = a;
+	value = activation(a);
 
 	for (int i = 0; i < send.size(); i++) {
 		send[i].notifyValue();
@@ -84,7 +90,7 @@ void Node::setValue(double a)
 
 void Node::setInfluence(double a)
 {
-	influence = a * tanhDerivative(value);
+	influence = a * activationDerivative(value);
 	for (int i = 0; i < recieve.size(); i++) {
 		recieve[i]->notifyInfluence();
 	}

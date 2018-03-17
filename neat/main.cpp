@@ -103,7 +103,7 @@ int main()
 					val = 1.0;
 				}
 
-				if (dataset.back().second[0] == -2) {
+				if (dataset.size() > 0 && dataset.back().second[0] == -2) {
 					dataset.back().second[0] = val;
 				}
 				else {
@@ -146,11 +146,15 @@ int main()
 
 	randInit();
 
-	Network winner(0, 0, 0, 0, 0.0, false);
-	Neat neat = Neat(250, 9, 1, .3, .1);
+	for (int i = 0; i < 100; i++) {
+		cout << random(-1.0, 1.0) << endl;
+	}
+
+	Network winner(9, 1, 0, 0, .1, false , &sigmoid, &sigmoidDerivative);
+	Neat neat = Neat(20, 9, 1, .3, .1, &sigmoid, &sigmoidDerivative);
 
 	//neg 1 indicates sell
-	winner = neat.start(dataset, valid, 100, 10000, winner);
+	neat.start(dataset, valid, 100, 10000, winner);
 	//neat.printNeat()
 
 	cout << endl;

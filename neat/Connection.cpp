@@ -13,6 +13,11 @@ Connection::Connection(Node * fromNode, Node * toNode, int inNumber)
 	nodeTo = toNode;
 	innovation = inNumber;
 	nextWeight = 0;
+	momentum = 0;
+	velocity = 0;
+	beta = .9;
+	betaA = .999;
+	epsilon = .00000001;
 
 	randWeight();
 }
@@ -20,7 +25,7 @@ Connection::Connection(Node * fromNode, Node * toNode, int inNumber)
 void Connection::randWeight()
 {
 	srand(unsigned(time(NULL)));
-	weight = ((rand()%10)/10)*.2 + .4;
+	weight = ((rand() % 10) / 10)*.2 + .4;
 }
 
 void Connection::notifyValue()
@@ -32,3 +37,11 @@ void Connection::notifyInfluence()
 {
 	nodeFrom->recieveInfluence();
 }
+
+double Connection::setWeight(double v) {
+	weight = v;
+	nextWeight = 0;
+
+	return v;
+}
+

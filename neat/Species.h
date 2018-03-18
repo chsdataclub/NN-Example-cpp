@@ -6,7 +6,6 @@ using namespace std;
 class Species {
 public:
 	static vector<pair<int, int>>* innovationDict;
-
 	vector<Network*> network;
 	vector<int> connectionInnovation;
 	vector<int> commonInnovation;
@@ -14,6 +13,7 @@ public:
 	double mutate;
 
 	Species(int id, vector<Network*> networks, double mutate);
+	Species();
 
 	void addCI(int a);
 	void removeCI(int a);
@@ -21,8 +21,8 @@ public:
 	int& incrementInov(int i);
 	int& reduceInov(int i);
 	void checkCI();
-	pair<int, int> getInnovationRef(int num);
-	int createNewInnovation(int a, int b);
+	//pair<int, int> getInnovationRef(int num);
+	//int createNewInnovation(int a, int b);
 	void sortInnovation();
 
 	Network& getNetworkAt(int a);

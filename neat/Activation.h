@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+using namespace std;
 
 double tanh(double value);
 double tanhDerivative(double value);
@@ -12,3 +14,6 @@ double lReluDerivative(double value);
 int random(int f, int t);
 double random(double f, double t);
 void randInit();
+
+pair<int, int> safeRead(vector<pair<int, int>>& connectionInnovation, int a);
+int safeWrite(vector<pair<int, int>>& connectionInnovation, int a, int b);

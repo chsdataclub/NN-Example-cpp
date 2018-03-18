@@ -151,12 +151,14 @@ int main()
 	}
 
 	Network winner(9, 1, 0, 0, .1, false , &sigmoid, &sigmoidDerivative);
-	Neat neat = Neat(20, 9, 1, .3, .1, &sigmoid, &sigmoidDerivative);
 
-	//neg 1 indicates sell
-	neat.start(dataset, valid, 100, 10000, winner);
-	//neat.printNeat()
+	for (int i = 0; i < 1000; i++) {
+		Neat neat = Neat(20, 9, 1, .3, .1, &sigmoid, &sigmoidDerivative);
 
+		//neg 1 indicates sell
+		neat.start(dataset, valid, 100, 10000, winner);
+		//neat.printNeat()
+	}
 	cout << endl;
 
 	//printNetwork(&winner);

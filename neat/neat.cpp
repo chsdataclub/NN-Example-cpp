@@ -10,6 +10,7 @@
 #include "Activation.h"
 #include <thread>
 #include <fstream>
+#include <mutex>
 using namespace std;
 
 Neat::Neat(int numNetworks, int input, int output, double mutate, double lr, double(*activation)(double value), double(*activationDerivative)(double value)) : nodeMutate(mutate)
@@ -183,6 +184,10 @@ Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, vector<
 		bestNet.printNetwork();
 		cout << "epoch:" << z << " best: " << bestFit << endl;
 		cout << endl;
+
+		if (z >= 10) {
+			return bestNet;
+		}
 	}
 
 	return bestNet;
@@ -410,6 +415,30 @@ double Neat::compareGenome(int node, vector<int>& innovation, int nodeA, vector<
 
 	//return missing + abs(node - nodeA) / (smaller->size() + ((node + nodeA) / 2));
 }
+
+/*mutex writing;
+//mutex reading;
+//might be rare issue of writing lock right after a try_lock
+pair<int, int> Neat::getInnovation(int num)
+{
+	pair<int, int> ans;
+	writing.lock();
+	ans = connectionInnovation[num];
+	writing.unlock();
+	return ans;
+}
+int Neat::addInnovation(int a, int b)
+{
+	lock_guard<mutex> w(writing);
+	connectionInnovation.push_back(pair<int, int>(a, b));
+	return connectionInnovation.size() - 1;
+}
+
+int Neat::innovationSize(int a)
+{
+	lock_guard<mutex> m(writing);
+	return connectionInnovation.size();
+}*/
 
 void Neat::printNeat() {
 	cout << endl;

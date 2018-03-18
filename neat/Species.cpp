@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "Species.h"
 #include <algorithm>
-#include<ctime> //for time function
-#include<cstdlib>// for srand function.
+#include <ctime> //for time function
+#include <cstdlib>// for srand function.
 #include "Activation.h"
 #include <iostream>
 #include <mutex>
@@ -18,7 +18,7 @@ Species::Species(int id, vector<Network*> networks, double mutate)
 
 	updateStereotype();
 }
-
+Species::Species() {}
 //these CI methods are for common innovation
 void Species::addCI(int a)
 {
@@ -89,7 +89,7 @@ void Species::checkCI()
 	}
 }
 
-mutex mRef;
+/*mutex mRef;
 pair<int, int> Species::getInnovationRef(int num)
 {
 	lock_guard<mutex> m(mRef);
@@ -100,12 +100,10 @@ mutex mx;
 int Species::createNewInnovation(int a, int b)
 {
 	lock_guard<mutex> lg(mx);
-	//dictControl.Lock() TODO: fix the multithread
 	pair<int, int> c = { a, b };
-	(*innovationDict).push_back(c); //TODO: simplify
-									//defer dictControl.Unlock()
+	(*innovationDict).push_back(c);
 	return innovationDict->size() - 1;
-}
+}*/
 
 void Species::sortInnovation()
 {
@@ -178,9 +176,9 @@ void Species::mutateNetwork(Network& network)
 	//finds or adds innovation numbers and returns the innovation
 	auto addConnectionInnovation = [&](int numFrom, int numTo) {
 		//checks to see if preexisting innovation
-		int maxPos = innovationDict->size();
+		int maxPos = innovationDict->size()-1;
 		for (int i = 0; i < maxPos; i++) {
-			pair<int, int> pos = getInnovationRef(i);
+			pair<int, int> pos = safeRead(*innovationDict, i);
 			if (pos.second == numTo && pos.first == numFrom) {
 				incrementInov(i);
 
@@ -189,7 +187,7 @@ void Species::mutateNetwork(Network& network)
 		}
 
 		//checks to see if needs to grow
-		int num = createNewInnovation(numFrom, numTo);
+		int num = safeWrite(*innovationDict, numFrom, numTo);
 
 		incrementInov(num);
 
@@ -309,7 +307,7 @@ void Species::mateNetwork(vector<Node>& nB, vector<Node>& nA, bool bBetter, Netw
 	//add nA innovation
 	for (int i = 0; i < numNode->size(); i++) {
 		for (int a = 0; a < (*numNode)[i].send.size(); a++) {
-			pair<int, int> ina = getInnovationRef((*numNode)[i].send[a].innovation);
+			pair<int, int> ina = safeRead(*innovationDict, (*numNode)[i].send[a].innovation);
 			ans.mutateConnection(ina.first, ina.second, (*numNode)[i].send[a].innovation);
 		}
 	}
@@ -317,7 +315,7 @@ void Species::mateNetwork(vector<Node>& nB, vector<Node>& nA, bool bBetter, Netw
 	//add unique (*l) innovation
 	for (int i = 0; i < l->size(); i++) {
 		for (int a = 0; a < (*l)[i].send.size(); a++) {
-			pair<int, int> inb = getInnovationRef((*l)[i].send[a].innovation);
+			pair<int, int> inb = safeRead(*innovationDict, (*l)[i].send[a].innovation);
 			int firstNode = inb.first;
 			int secondNode = inb.second;
 

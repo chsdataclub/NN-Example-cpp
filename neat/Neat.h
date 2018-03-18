@@ -29,8 +29,10 @@ public:
 	void speciate(Network& n, Species* s);
 	double compareGenome(int node, vector<int>& innovation, int nodeA, vector<int>& innovationA);
 
-	//int* getInnovation(int num);
-	//int findInnovation(int search[2]);
+	//pair<int,int> getInnovation(int num);
+	//int addInnovation(int a, int b);
+	//int innovationSize(int a);
+
 	Species& getSpecies(int id);
 	Species& createSpecies(vector<Network*>& possible);
 	Species& createSpecies(int startIndex, int endIndex);

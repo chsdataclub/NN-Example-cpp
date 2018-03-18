@@ -2,6 +2,7 @@
 #include <random>
 #include <ctime>
 #include "Activation.h"
+#include <mutex>
 using namespace std;
 
 typedef std::mt19937 MyRNG;  // the Mersenne Twister with a popular choice of parameters
@@ -41,6 +42,18 @@ double lReluDerivative(double value)
 }
 void randInit() {
 	rng.seed(time(NULL));
+}
+
+//these are the new add and read methods
+mutex m;
+pair<int, int> safeRead(vector<pair<int, int>>& connectionInnovation, int a) {
+	lock_guard<mutex> fa(m);
+	return connectionInnovation[a];
+}
+int safeWrite(vector<pair<int, int>>& connectionInnovation, int a, int b) {
+	lock_guard<mutex> w(m);
+	connectionInnovation.push_back(pair<int, int>(a, b));
+	return connectionInnovation.size() - 1;
 }
 
 //generates number [f,t]

@@ -424,7 +424,6 @@ bool Network::checkCircle(Node& n, int goal, int preCheck[])
 	return ans;
 }
 
-mutex cloneMutex;
 void clone(Network n, Network& ans, vector<pair<int, int>>* innovationDict)
 {
 	ans = Network(n.input.size() - 1, n.output.size(), n.networkId, n.species, n.learningRate, false, ans.activation, ans.activationDerivative);
@@ -435,9 +434,7 @@ void clone(Network n, Network& ans, vector<pair<int, int>>* innovationDict)
 	for (int i = 0; i < n.nodeList.size(); i++) {
 		Node* node = &n.nodeList[i];
 		for (int a = 0; a < n.nodeList[i].send.size(); a++) {
-			cloneMutex.lock();
-			pair<int, int> v = (*innovationDict)[node->send[a].innovation];
-			cloneMutex.unlock();
+			pair<int, int> v = safeRead(*innovationDict, node->send[a].innovation);
 			ans.mutateConnection(v.first, v.second, node->send[a].innovation, node->send[a].weight);
 		}
 	}

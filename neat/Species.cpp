@@ -336,22 +336,8 @@ void Species::trainNetworks(vector<pair<vector<double>, vector<double>>>& traini
 
 void Species::mateSpecies()
 {
-	{
-		for (int i = 0; i < network.size(); i++) {
-			if (network[i]->networkId < 0) {
-				cout << "shittttt" << endl;
-			}
-		}
-	}
 	adjustFitness();
 
-	{
-		for (int i = 0; i < network.size(); i++) {
-			if (network[i]->networkId < 0) {
-				cout << "shittttt" << endl;
-			}
-		}
-	}
 	//sorts by adjusted fitness
 	vector<Network*> sortedNetwork;
 	sortedNetwork.reserve((network.size() * 85 / 100));
@@ -385,19 +371,7 @@ void Species::mateSpecies()
 		sumFitness += sortedNetwork[i]->adjustedFitness;
 		lastValue = sortedNetwork[i]->adjustedFitness;
 	}
-	{
-		for (int i = 0; i < network.size(); i++) {
-			if (network[i]->networkId < 0) {
-				cout << "shittttt" << endl;
-			}
-		}
 
-		for (int i = 0; i < sortedNetwork.size(); i++) {
-			if (sortedNetwork[i]->networkId < 0) {
-				cout << "shiiiiiiittttttttttt" << endl;
-			}
-		}
-	}
 	int count = 0;
 	//mates networks
 	for (int i = 0; i < sortedNetwork.size(); i++) {
@@ -411,127 +385,26 @@ void Species::mateSpecies()
 			sortedNetwork[i]->networkId = id;
 			count++;
 			numMade--;
-			{
-				for (int i = 0; i < network.size(); i++) {
-					if (network[i]->networkId < 0) {
-						cout << "shittttt" << endl;
-					}
-				}
-
-				for (int i = 0; i < sortedNetwork.size(); i++) {
-					if (sortedNetwork[i]->networkId < 0) {
-						cout << "shiiiiiiittttttttttt" << endl;
-					}
-				}
-			}
-		}
-		{
-			for (int i = 0; i < network.size(); i++) {
-				if (network[i]->networkId < 0) {
-					cout << "shittttt" << endl;
-				}
-			}
-
-			for (int i = 0; i < sortedNetwork.size(); i++) {
-				if (sortedNetwork[i]->networkId < 0) {
-					cout << "shiiiiiiittttttttttt" << endl;
-				}
-			}
-		}
-	}
-
-	{
-		for (int i = 0; i < network.size(); i++) {
-			if (network[i]->networkId < 0) {
-				cout << "shittttt" << endl;
-			}
-		}
-
-		for (int i = 0; i < sortedNetwork.size(); i++) {
-			if (sortedNetwork[i]->networkId < 0) {
-				cout << "shiiiiiiittttttttttt" << endl;
-			}
 		}
 	}
 
 	//mutates for remainder of spots available
 	for (int i = 0; count < network.size(); i++) {
 		int id = network[count]->networkId;
-		{
-			for (int i = 0; i < network.size(); i++) {
-				if (network[i]->networkId < 0) {
-					cout << "shittttt" << endl;
-				}
-			}
 
-			for (int i = 0; i < sortedNetwork.size(); i++) {
-				if (sortedNetwork[i]->networkId < 0) {
-					cout << "shiiiiiiittttttttttt" << endl;
-				}
-			}
-		}
 		clone(*sortedNetwork[i], *network[count], innovationDict);
-		{
-			for (int i = 0; i < network.size(); i++) {
-				if (network[i]->networkId < 0) {
-					cout << "shittttt" << endl;
-				}
-			}
-
-			for (int i = 0; i < sortedNetwork.size(); i++) {
-				if (sortedNetwork[i]->networkId < 0) {
-					cout << "shiiiiiiittttttttttt" << endl;
-				}
-			}
-		}
+		
 		mutateNetwork(*network[count]);
-		{
-			for (int i = 0; i < network.size(); i++) {
-				if (network[i]->networkId < 0) {
-					cout << "shittttt" << endl;
-				}
-			}
-
-			for (int i = 0; i < sortedNetwork.size(); i++) {
-				if (sortedNetwork[i]->networkId < 0) {
-					cout << "shiiiiiiittttttttttt" << endl;
-				}
-			}
-		}
+		
 		network[count]->networkId = id;
 		count++;
 
 		if (i == sortedNetwork.size() - 1) {
 			i--; //this can lead to mutating the same network as last time (stacking mutations) but i don't think it is a big deal
 		}
-		{
-			for (int i = 0; i < network.size(); i++) {
-				if (network[i]->networkId < 0) {
-					cout << "shittttt" << endl;
-				}
-			}
-
-			for (int i = 0; i < sortedNetwork.size(); i++) {
-				if (sortedNetwork[i]->networkId < 0) {
-					cout << "shiiiiiiittttttttttt" << endl;
-				}
-			}
-		}
+		
 	}
 
-	{
-		for (int i = 0; i < network.size(); i++) {
-			if (network[i]->networkId < 0) {
-				cout << "shittttt" << endl;
-			}
-		}
-
-		for (int i = 0; i < sortedNetwork.size(); i++) {
-			if (sortedNetwork[i]->networkId < 0) {
-				cout << "shiiiiiiittttttttttt" << endl;
-			}
-		}
-	}
 	updateStereotype();
 }
 

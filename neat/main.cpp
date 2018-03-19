@@ -24,7 +24,7 @@ int main()
 		for (int i = 0; getline(myfile, line); i++) {
 			double value = -1;
 			try {
-				value = stod(line.string::substr(line.find(',')+1));
+				value = stod(line.string::substr(line.find(',') + 1));
 			}
 			catch (...) {
 				cout << "caught" << endl;
@@ -111,7 +111,7 @@ int main()
 				}
 			}
 
-			if (rand()/(double)RAND_MAX > .1) {
+			if (rand() / (double)RAND_MAX > .1) {
 				dataset.push_back(p);
 			}
 			else {
@@ -150,29 +150,27 @@ int main()
 		cout << random(-1.0, 1.0) << endl;
 	}
 
-	Network winner(9, 1, 0, 0, .1, false , &sigmoid, &sigmoidDerivative);
+	Network winner(9, 1, 0, 0, .1, false, &sigmoid, &sigmoidDerivative);
 
-	for (int i = 0; i < 1000; i++) {
-		Neat neat = Neat(20, 9, 1, .3, .1, &sigmoid, &sigmoidDerivative);
+	Neat neat = Neat(250, 9, 1, .3, .1, &sigmoid, &sigmoidDerivative);
 
-		//neg 1 indicates sell
-		neat.start(dataset, valid, 100, 10000, winner);
-		//neat.printNeat()
-	}
+	//neg 1 indicates sell
+	neat.start(dataset, valid, 100, 10000, winner);
+	//neat.printNeat()
 	cout << endl;
 
 	//printNetwork(&winner);
 	cout << "best " << winner.fitness << "error " << 1 / winner.fitness << endl;
 	//cout << "result " << winner.process(dataset[0].first)[0] << winner.process(dataset[100].first)[0] << winner.process(dataset[150].first)[0] << winner.process(dataset[3].first)[250] << endl; //1 1 0 0
 	for (int i = 0; i < valid.size(); i++) {
-		cout << winner.process(valid[i].first)[0] << " vs " << valid[i].second[0] << " dif " << (winner.process(valid[i].first)[0]-valid[i].second[0]) << endl;
+		cout << winner.process(valid[i].first)[0] << " vs " << valid[i].second[0] << " dif " << (winner.process(valid[i].first)[0] - valid[i].second[0]) << endl;
 	}
 	cout << "done";
 
 	ofstream myfile("bestnet.txt");
-	myfile << winner.input.size()-1 << endl;
+	myfile << winner.input.size() - 1 << endl;
 	myfile << winner.output.size() << endl;
-	myfile << winner.nodeList.size()-winner.input.size()-winner.output.size() << endl;
+	myfile << winner.nodeList.size() - winner.input.size() - winner.output.size() << endl;
 	for (int i = 0; i < winner.nodeList.size(); i++) {
 		for (int a = 0; a < winner.nodeList[i].send.size(); a++) {
 			myfile << winner.nodeList[i].id << " " << winner.nodeList[i].send[a].nodeTo->id << " " << winner.nodeList[i].send[a].weight << endl;

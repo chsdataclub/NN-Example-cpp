@@ -1,6 +1,32 @@
-9
-1
-28
+9 1 sig
+11 lRelu
+12 tanh
+13 tanh
+14 tanh
+15 sig
+16 tanh
+17 tanh
+18 tanh
+19 tanh
+20 sig
+21 lRelu
+22 tanh
+23 tanh
+24 sig
+25 tanh
+26 sig
+27 sig
+28 lRelu
+29 sig
+30 tanh
+31 lRelu
+32 sig
+33 sig
+34 sig
+35 sig
+36 lRelu
+37 lRelu
+38 tanh
 1 0 0.246476
 1 11 0.317963
 1 15 0.31674

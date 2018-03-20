@@ -4,7 +4,16 @@
 #include "Neat.h"
 #include "Activation.h"
 #include <fstream>
+#include <sstream>
 using namespace std;
+
+void split(const std::string &s, char delim, vector<string> &result) {
+	stringstream ss(s);
+	string item;
+	while (getline(ss, item, delim)) {
+		result.push_back(item);
+	}
+}
 
 int main()
 {
@@ -126,21 +135,50 @@ int main()
 		}
 	}
 
+	
 	for (int i = 0; i < dataset[0].first.size(); i++) {
 		double max = -1000000;
 		double min = 100000000;
-		for (int a = 0; a < dataset.size(); a++) {
-			double val = dataset[a].first[i];
-			if (val > max) {
-				max = val;
+		{
+			for (int a = 0; a < dataset.size(); a++) {
+				double val = dataset[a].first[i];
+				if (val > max) {
+					max = val;
+				}
+				else if (val < min) {
+					min = val;
+				}
 			}
-			else if (val < min) {
-				min = val;
+
+			for (int a = 0; a < dataset.size(); a++) {
+				double val = dataset[a].first[i];
+				if (val > max) {
+					max = val;
+				}
+				else if (val < min) {
+					min = val;
+				}
 			}
 		}
 
 		for (int a = 0; a < dataset.size(); a++) {
 			dataset[a].first[i] = (dataset[a].first[i] - min) / (max - min);
+		}
+
+		for (int a = 0; a < valid.size(); a++) {
+			valid[a].first[i] = (valid[a].first[i] - min) / (max - min);
+		}
+	}
+
+	for (int i = 0; i < valid.size(); i++) {
+		if (valid[i].second[0] == -2) {
+			valid.erase(valid.begin() + i);
+		}
+	}
+
+	for (int i = 0; i < dataset.size(); i++) {
+		if (dataset[i].second[0] == -2) {
+			dataset.erase(dataset.begin() + i);
 		}
 	}
 
@@ -151,16 +189,38 @@ int main()
 	}
 
 	Network winner(9, 1, 0, 0, .1, false, &sigmoid, &sigmoidDerivative);
+	winner.nodeList.clear();
+	winner.output.clear();
+	winner.innovation.clear();
 
-	Neat neat = Neat(250, 9, 1, .3, .1, &sigmoid, &sigmoidDerivative);
+	//Neat neat = Neat(250, 9, 1, .3, .1, &sigmoid, &sigmoidDerivative);
 
-	//neg 1 indicates sell
-	neat.start(dataset, valid, 100, 10000, winner);
+	//0 indicates sell
+	//neat.start(dataset, valid, 100, 10000, winner);
+
+	ifstream net("bestnet.txt");
+	string line;
+	for (int i = 0; getline(net, line); i++) {
+		vector<string> in;
+		split(line, ' ', in);
+		if (i == 0) {
+			winner = Network(stoi(in[0]), stoi(in[1]), 0, 0, .1, false, stringtoAct(in[2]), stringtoDeriv(in[2]));
+		}
+		else if (in.size() == 3) {
+			winner.mutateConnection(stoi(in[0]), stoi(in[1]), 0, stod(in[2]));
+		}
+		else if (in.size() == 2) {
+			winner.createNode(100, stringtoAct(in[1]), stringtoDeriv(in[1]));
+		}
+	}
+	winner.printNetwork();
 	//neat.printNeat()
 	cout << endl;
 
+	winner.trainset(dataset, valid, 100000);
+
 	//printNetwork(&winner);
-	cout << "best " << winner.fitness << "error " << 1 / winner.fitness << endl;
+	cout << "best " << winner.fitness << " error " << 1 / winner.fitness << endl;
 	//cout << "result " << winner.process(dataset[0].first)[0] << winner.process(dataset[100].first)[0] << winner.process(dataset[150].first)[0] << winner.process(dataset[3].first)[250] << endl; //1 1 0 0
 	for (int i = 0; i < valid.size(); i++) {
 		cout << winner.process(valid[i].first)[0] << " vs " << valid[i].second[0] << " dif " << (winner.process(valid[i].first)[0] - valid[i].second[0]) << endl;
@@ -168,9 +228,11 @@ int main()
 	cout << "done";
 
 	ofstream myfile("bestnet.txt");
-	myfile << winner.input.size() - 1 << endl;
-	myfile << winner.output.size() << endl;
-	myfile << winner.nodeList.size() - winner.input.size() - winner.output.size() << endl;
+	myfile << winner.input.size() - 1 << " " << winner.output.size() << " " << acttoString(winner.nodeList[0].activation).c_str() << endl;
+	for (int i = 0; i < winner.nodeList.size(); i++) {
+		Node& n = winner.nodeList[i];
+		myfile << n.id << " " << acttoString(n.activation).c_str() << endl;
+	}
 	for (int i = 0; i < winner.nodeList.size(); i++) {
 		for (int a = 0; a < winner.nodeList[i].send.size(); a++) {
 			myfile << winner.nodeList[i].id << " " << winner.nodeList[i].send[a].nodeTo->id << " " << winner.nodeList[i].send[a].weight << endl;

@@ -77,9 +77,11 @@ Network Neat::start(vector<pair<vector<double>, vector<double>>>& input, vector<
 			strikes = cutoff;
 
 			ofstream myfile("bestnet.txt");
-			myfile << bestNet.input.size() - 1 << endl;
-			myfile << bestNet.output.size() << endl;
-			myfile << bestNet.nodeList.size() - bestNet.input.size() - bestNet.output.size() << endl;
+			myfile << bestNet.input.size() - 1 << " " << bestNet.output.size() << " " << acttoString(bestNet.nodeList[0].activation).c_str() << endl;
+			for (int i = 0; i < bestNet.nodeList.size(); i++) {
+				Node& n = bestNet.nodeList[i];
+				myfile << n.id << " " << acttoString(n.activation).c_str() << endl;
+			}
 			for (int i = 0; i < bestNet.nodeList.size(); i++) {
 				for (int a = 0; a < bestNet.nodeList[i].send.size(); a++) {
 					myfile << bestNet.nodeList[i].id << " " << bestNet.nodeList[i].send[a].nodeTo->id << " " << bestNet.nodeList[i].send[a].weight << endl;

@@ -130,6 +130,7 @@ double Network::trainset(vector<pair<vector<double>, vector<double>>>& input, ve
 	//initializes best weights
 	vector<vector<double>> bestWeight;
 	double globalBest = 100000;
+	double globalValid = 100000;
 	resetWeight(); //clears the current weight values
 
 	int strikes = 10; //number of times in a row that error can increase
@@ -167,12 +168,16 @@ double Network::trainset(vector<pair<vector<double>, vector<double>>>& input, ve
 
 		//decreases the number of strikes or resets them and changes best weight
 		if (validError > lastValid) {
-			strikes--;
+			//strikes--;
 		}
 		else if (errorChange >= 0) {
 			strikes--;
 		}
-		else if (currentError < globalBest) {
+		else if(errorChange < 0) {
+			strikes = 10;
+		}
+
+		if (validError < globalValid) {
 			bestWeight.clear();
 			for (int i = 0; i < nodeList.size(); i++) {
 				vector<double> one;
@@ -185,10 +190,12 @@ double Network::trainset(vector<pair<vector<double>, vector<double>>>& input, ve
 			strikes = 10;
 
 			globalBest = currentError;
-			lastValid = validError;
+			globalValid = validError;
 		}
 
-		//cout << "Error: " << currentError << " change " << errorChange << endl;
+		cout << "Error: " << currentError << " change " << errorChange << " real error " << validError << " real change " << (validError-lastValid)/lastValid << endl;
+		lastValid = validError;
+
 	}
 
 	//sets the weights back to the best
@@ -208,7 +215,7 @@ double Network::trainset(vector<pair<vector<double>, vector<double>>>& input, ve
 	}
 
 	fitness = 1 / final;
-	//cout << "final training is " << fitness << endl;
+	cout << "final training is " << fitness << endl;
 	return final;
 }
 

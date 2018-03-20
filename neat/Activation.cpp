@@ -44,6 +44,48 @@ void randInit() {
 	rng.seed(time(NULL));
 }
 
+activation stringtoAct(string in)
+{
+	if (in == "sig") {
+		return &sigmoid;
+	}
+	else if (in == "lRelu") {
+		return &lRelu;
+	}
+	else if (in == "tanh") {
+		return  &tanh;
+	}
+}
+
+activationDerivative stringtoDeriv(string in)
+{
+	if (in == "sig") {
+		return &sigmoidDerivative;
+	}
+	else if (in == "lRelu") {
+		return &lReluDerivative;
+	}
+	else if (in == "tanh") {
+		return  &tanhDerivative;
+	}
+}
+
+string acttoString(activation activation)
+{
+	string act = "";
+	if (activation == &tanh) { //ignore if error
+		act = "tanh";
+	}
+	else if (activation == &sigmoid) {
+		act = "sig";
+	}
+	else if (activation == &lRelu) {
+		act = "lRelu";
+	}
+
+	return act;
+}
+
 //these are the new add and read methods
 mutex m;
 pair<int, int> safeRead(vector<pair<int, int>>& connectionInnovation, int a) {

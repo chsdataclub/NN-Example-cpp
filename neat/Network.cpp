@@ -433,7 +433,7 @@ bool Network::checkCircle(Node& n, int goal, int preCheck[])
 
 void clone(Network n, Network& ans, vector<pair<int, int>>* innovationDict)
 {
-	ans = Network(n.input.size() - 1, n.output.size(), n.networkId, n.species, n.learningRate, false, ans.activation, ans.activationDerivative);
+	ans = Network(n.input.size() - 1, n.output.size(), n.networkId, n.species, n.learningRate, false, n.activation, n.activationDerivative);
 
 	for (int i = n.output.size() + n.input.size(); i < n.nodeList.size(); i++) {
 		ans.createNode(100, n.nodeList[i].activation, n.nodeList[i].activationDerivative);
